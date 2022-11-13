@@ -50,9 +50,9 @@ class MyApp extends StatelessWidget {
       initialRoute: LaunchDecider.routeName,
       routes: {
         LaunchDecider.routeName: (ctx) => const LaunchDecider(),
-        PhoneAuthScreen.routeName: (ctx) => PhoneAuthScreen(),
-        HomeScreen.routeName: (ctx) => HomeScreen(),
-        ChooseFiltersScreen.routeName: (ctx) => ChooseFiltersScreen(),
+        PhoneAuthScreen.routeName: (ctx) => const PhoneAuthScreen(),
+        HomeScreen.routeName: (ctx) => const HomeScreen(),
+        ChooseFiltersScreen.routeName: (ctx) => const ChooseFiltersScreen(),
       },
     );
   }

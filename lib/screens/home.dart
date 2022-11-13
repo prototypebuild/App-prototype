@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:lefoode/api/fake_api.dart';
 import 'package:lefoode/constants/colors.dart';
+import 'package:lefoode/models/outlet.dart';
 import 'package:lefoode/screens/subscreens/home/choose_filters.dart';
 import 'package:lefoode/widgets/fade_animation.dart';
 import 'package:lefoode/widgets/input.dart';
@@ -16,10 +18,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool loaded = true;
+  List<Outlet> _loadedOutlets = [];
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 5)).then((value) {
+    FakeApiManager().getOutlets().then((value) {
       setState(() {
+        _loadedOutlets = value;
         loaded = true;
       });
     });
@@ -44,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Center(
               child: TextField(
                 onSubmitted: (value) {
-                  Navigator.of(context).pushNamed(ChooseFiltersScreen.routeName);
+                  // Navigator.of(context).pushNamed(ChooseFiltersScreen.routeName);
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -61,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Text(
               "Restaurants near you",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
                 color: ConstantColors.midGrayText,
@@ -81,9 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
           else
             Column(
               children: [
-                for (var i = 0; i < 5; i++)
+                for (var i = 0; i < _loadedOutlets.length; i++)
                   FadeAnimation(
-                    child: OutletCard(),
+                    child: OutletCard(
+                      outlet: _loadedOutlets[i],
+                    ),
                     delay: i + 1,
                   ),
               ],

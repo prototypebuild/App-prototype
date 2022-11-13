@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:lefoode/models/outlet.dart';
 import 'package:lefoode/widgets/primary_button.dart';
 import 'package:lefoode/widgets/v_space.dart';
 
 class OutletCard extends StatelessWidget {
-  const OutletCard({super.key});
+  final Outlet outlet;
+  const OutletCard({
+    super.key,
+    required this.outlet,
+  });
 
   @override
   Widget build(BuildContext context) {
