@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lefoode/constants/colors.dart';
 import 'package:lefoode/firebase_options.dart';
+import 'package:lefoode/screens/auth/launch_decider.dart';
 import 'package:lefoode/screens/auth/phone_auth.dart';
 import 'package:lefoode/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,9 +46,10 @@ class MyApp extends StatelessWidget {
           ThemeData.dark().textTheme.copyWith(),
         ),
       ),
-      themeMode: ThemeMode.light,
-      initialRoute: PhoneAuthScreen.routeName,
+      themeMode: ThemeMode.dark,
+      initialRoute: LaunchDecider.routeName,
       routes: {
+        LaunchDecider.routeName: (ctx) => const LaunchDecider(),
         PhoneAuthScreen.routeName: (ctx) => PhoneAuthScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
         ChooseFiltersScreen.routeName: (ctx) => ChooseFiltersScreen(),
