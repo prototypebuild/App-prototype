@@ -3,6 +3,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:lefoode/api/fake_api.dart';
 import 'package:lefoode/constants/colors.dart';
 import 'package:lefoode/models/outlet.dart';
+import 'package:lefoode/screens/settings.dart';
 import 'package:lefoode/screens/subscreens/home/choose_filters.dart';
 import 'package:lefoode/widgets/fade_animation.dart';
 import 'package:lefoode/widgets/input.dart';
@@ -40,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Ionicons.location_outline)),
+          IconButton(onPressed: () {
+            Navigator.of(context).pushNamed(SettingsScreen.routeName);
+          }, icon: Icon(Ionicons.settings_outline)),
         ],
       ),
       body: ListView(

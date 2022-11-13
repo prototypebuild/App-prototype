@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lefoode/api/global_helpers.dart';
 import 'package:lefoode/api/ui_overlays.dart';
@@ -118,7 +119,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         borderRadius: BorderRadius.circular(5),
                         fieldHeight: 50,
                         fieldWidth: 40,
-                        activeFillColor: Colors.white,
+                        activeFillColor: Colors.transparent,
                         selectedFillColor: Colors.transparent,
                         inactiveColor: ConstantColors.midGrayText,
                         inactiveFillColor: Colors.transparent,
@@ -137,8 +138,19 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                                 verificationId: verificationId,
                                 smsCode: smsCode);
 
-                        // Sign the user in (or link) with the credential
-                        await auth.signInWithCredential(credential);
+                        try {
+                          // Sign the user in (or link) with the credential
+                          await auth.signInWithCredential(credential);
+                        } catch (e) {
+                          var error = e as FirebaseAuthException;
+                          Fluttertoast.showToast(msg: error.message ?? error.code);
+                          setState(() {
+                            loading = false;
+                          });
+                          Navigator.of(context).popUntil(
+                              ModalRoute.withName(PhoneAuthScreen.routeName));
+                          return;
+                        }
                         var userDoc = await FirebaseFirestore.instance
                             .collection('users')
                             .doc(auth.currentUser!.uid)
@@ -217,7 +229,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
             keyboardType: TextInputType.phone,
             autofocus: true,
             onChanged: (value) {
-              if (value.length == 10) {
+              if (value.length == 10 && int.tryParse(value) != null) {
                 GlobalHelpers.hideKeyboard();
 
                 if (loading) return;

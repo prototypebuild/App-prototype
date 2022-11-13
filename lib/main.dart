@@ -7,6 +7,7 @@ import 'package:lefoode/screens/auth/phone_auth.dart';
 import 'package:lefoode/screens/auth/register.dart';
 import 'package:lefoode/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lefoode/screens/settings.dart';
 import 'package:lefoode/screens/subscreens/home/choose_filters.dart';
 
 void main() async {
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         RegistrationScreen.routeName: (ctx) => const RegistrationScreen(),
         HomeScreen.routeName: (ctx) => const HomeScreen(),
         ChooseFiltersScreen.routeName: (ctx) => const ChooseFiltersScreen(),
+        SettingsScreen.routeName: (ctx) => const SettingsScreen(),
       },
     );
   }
