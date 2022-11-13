@@ -17,13 +17,6 @@ class OutletCard extends StatelessWidget {
     return Container(
       width: viewport.width,
       padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          width: 1,
-          color: Color(0xffd3d3d3),
-        ),
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +27,7 @@ class OutletCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
             ),
             child: Image.network(
-              "https://content.jdmagicbox.com/comp/ernakulam/d3/0484px484.x484.180913033229.r4d3/catalogue/matha-hotel-palarivattom-ernakulam-restaurants-s6uuek4kb9.jpg",
+              outlet.bannerUrl,
               height: 190,
               width: viewport.width,
               fit: BoxFit.cover,
@@ -47,7 +40,7 @@ class OutletCard extends StatelessWidget {
               children: [
                 VSpace(),
                 Text(
-                  "Hotel Matha",
+                  outlet.name,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
@@ -60,7 +53,7 @@ class OutletCard extends StatelessWidget {
                     Row(
                       children: [
                         Icon(Ionicons.location, size: 20),
-                        Text("Edappally"),
+                        Text(outlet.location),
                       ],
                     ),
                     Row(
@@ -70,14 +63,14 @@ class OutletCard extends StatelessWidget {
                           size: 20,
                           color: Colors.amber,
                         ),
-                        Text("4"),
+                        Text(outlet.rating.toString()),
                       ],
                     ),
                   ],
                 ),
                 Chip(
                   label: Text(
-                    "open",
+                    outlet.isOpen ? "Open" : "Closed",  
                   ),
                   backgroundColor: Color(0xff7BFF7B),
                 ),

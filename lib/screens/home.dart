@@ -8,6 +8,8 @@ import 'package:lefoode/widgets/fade_animation.dart';
 import 'package:lefoode/widgets/input.dart';
 import 'package:lefoode/widgets/outlet_card.dart';
 
+import '../widgets/v_space.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String routeName = "/home";
   const HomeScreen({super.key});
@@ -72,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          VSpace(s: 10),
           if (!loaded)
             Container(
               height: 400,
@@ -86,11 +89,16 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               children: [
                 for (var i = 0; i < _loadedOutlets.length; i++)
-                  FadeAnimation(
-                    child: OutletCard(
-                      outlet: _loadedOutlets[i],
-                    ),
-                    delay: i + 1,
+                  Column(
+                    children: [
+                      FadeAnimation(
+                        child: OutletCard(
+                          outlet: _loadedOutlets[i],
+                        ),
+                        delay: i + 1,
+                      ),
+                      if (i != _loadedOutlets.length - 1) VSpace(s: 10),
+                    ],
                   ),
               ],
             ),
