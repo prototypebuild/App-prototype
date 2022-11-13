@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lefoode/api/ui_overlays.dart';
 import 'package:lefoode/constants/colors.dart';
+import 'package:lefoode/providers/theme_provider.dart';
 import 'package:lefoode/screens/auth/launch_decider.dart';
 import 'package:lefoode/widgets/v_space.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String routeName = "/settings";
@@ -15,7 +17,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool isDarkMode = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,19 +31,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             elevation: 0,
             child: ListTile(title: Text("General")),
           ),
-          ListTile(
-            leading: Icon(Ionicons.contrast_outline),
-            title: Text("Dark Mode"),
-            subtitle: Text("Current mode: ${isDarkMode ? "Dark" : "System"}"),
-            trailing: Switch(
-              value: isDarkMode,
-              activeColor: Theme.of(context).primaryColor,
-              onChanged: (value) {
-                setState(() {
-                  isDarkMode = value;
-                });
-              },
-            ),
+          Consumer<ThemeProvider>(
+            builder: ((context, themeProvider, child) {
+              return ListTile(
+                leading: Icon(Ionicons.contrast_outline),
+                title: Text("Dark Mode"),
+                subtitle: Text(
+                    "Current mode: ${themeProvider.isDarkMode ? "Dark" : "Light"}"),
+                trailing: Switch(
+                  value: themeProvider.isDarkMode,
+                  activeColor: Theme.of(context).primaryColor,
+                  onChanged: (value) {
+                    themeProvider
+                        .setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+                  },
+                ),
+              );
+            }),
           ),
           ListTile(
             leading: Icon(Ionicons.power_outline),
