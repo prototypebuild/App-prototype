@@ -11,6 +11,8 @@ import 'package:lefoode/widgets/fade_animation.dart';
 import 'package:lefoode/widgets/input.dart';
 import 'package:lefoode/widgets/location_handler.dart';
 import 'package:lefoode/widgets/outlet_card.dart';
+import 'package:lefoode/widgets/touchable_opacity.dart';
+import 'package:lottie/lottie.dart';
 
 import '../widgets/v_space.dart';
 
@@ -80,9 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Center(
                 child: TextField(
                   textInputAction: TextInputAction.search,
-                  onChanged: (value) {
-                    
-                  },
+                  onChanged: (value) {},
                   onSubmitted: (value) {
                     if (value.trim().isNotEmpty) {
                       searchOutletsByName(value.trim());
@@ -95,7 +95,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Ionicons.search_outline,
                       color: ConstantColors.primary,
                     ),
-                    hintText: "Search Restaurant / Food",
+                    suffixIcon: TouchableOpacity(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(ChooseFiltersScreen.routeName);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 12.0),
+                        child: Icon(
+                          Ionicons.filter_outline,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                      ),
+                    ),
+                    hintText: "Search Restaurants around you",
                   ),
                 ),
               ),
@@ -138,6 +151,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (i != _loadedOutlets.length - 1) VSpace(s: 10),
                       ],
                     ),
+                  if (loaded && _loadedOutlets.isEmpty) ...[
+                    Lottie.asset("assets/anim/data-not-found.json",
+                        height: 400, width: 400),
+                    VSpace(),
+                    Text(
+                      "Try searching for something else",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ],
                 ],
               ),
           ],

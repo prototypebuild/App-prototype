@@ -12,7 +12,7 @@ class ThemeProvider with ChangeNotifier {
 
   void loadTheme() async {
     _prefs = await SharedPreferences.getInstance();
-    _isDarkMode = _prefs!.getBool("isDarkMode") ?? true; // default to dark mode
+    _isDarkMode = _prefs!.getBool("isDarkMode") ?? false; // default to dark mode
     loaded = true;
     notifyListeners();
   }
