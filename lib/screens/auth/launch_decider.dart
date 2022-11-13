@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lefoode/screens/auth/phone_auth.dart';
+import 'package:lefoode/screens/auth/register.dart';
 import 'package:lefoode/screens/home.dart';
 
 class LaunchDecider extends StatefulWidget {
@@ -18,8 +21,11 @@ class _LaunchDeciderState extends State<LaunchDecider> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+        if(user.displayName != null && user.displayName!.isNotEmpty) {
+          Navigator.of(context).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(RegistrationScreen.routeName, (route) => false);
+        }
       } else {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(PhoneAuthScreen.routeName, (route) => false);

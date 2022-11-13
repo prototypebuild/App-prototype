@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lefoode/api/global_helpers.dart';
 import 'package:lefoode/api/ui_overlays.dart';
+import 'package:lefoode/screens/auth/register.dart';
 import 'package:lefoode/screens/home.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -24,6 +26,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController numberController = TextEditingController();
   bool loading = false;
+  int? otpResendToken;
 
   void login(BuildContext context) async {
     setState(() {
@@ -54,6 +57,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         // Handle other errors
       },
       codeSent: (String verificationId, int? resendToken) async {
+        otpResendToken = resendToken;
         Navigator.of(context)
             .popUntil(ModalRoute.withName(PhoneAuthScreen.routeName));
         showModalBottomSheet(
@@ -135,10 +139,19 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                         // Sign the user in (or link) with the credential
                         await auth.signInWithCredential(credential);
+                        var userDoc = await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(auth.currentUser!.uid)
+                            .get();
                         Navigator.of(context).popUntil(
                             ModalRoute.withName(PhoneAuthScreen.routeName));
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomeScreen.routeName);
+                        if (userDoc.exists) {
+                          Navigator.of(context)
+                              .pushReplacementNamed(HomeScreen.routeName);
+                        } else {
+                          Navigator.of(context).pushReplacementNamed(
+                              RegistrationScreen.routeName);
+                        }
                       },
                       onChanged: (value) {
                         print(value);
@@ -162,6 +175,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         );
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
+      forceResendingToken: otpResendToken,
     );
   }
 

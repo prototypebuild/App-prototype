@@ -4,6 +4,7 @@ import 'package:lefoode/constants/colors.dart';
 import 'package:lefoode/firebase_options.dart';
 import 'package:lefoode/screens/auth/launch_decider.dart';
 import 'package:lefoode/screens/auth/phone_auth.dart';
+import 'package:lefoode/screens/auth/register.dart';
 import 'package:lefoode/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lefoode/screens/subscreens/home/choose_filters.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
       routes: {
         LaunchDecider.routeName: (ctx) => const LaunchDecider(),
         PhoneAuthScreen.routeName: (ctx) => const PhoneAuthScreen(),
+        RegistrationScreen.routeName: (ctx) => const RegistrationScreen(),
         HomeScreen.routeName: (ctx) => const HomeScreen(),
         ChooseFiltersScreen.routeName: (ctx) => const ChooseFiltersScreen(),
       },

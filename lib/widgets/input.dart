@@ -61,6 +61,9 @@ class Input extends StatelessWidget {
           : MaxLengthEnforcement.none,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         hintText: hintText,
         labelText: labelText,
         prefixIcon: prefixIcon,
