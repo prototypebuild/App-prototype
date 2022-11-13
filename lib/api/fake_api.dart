@@ -58,14 +58,14 @@ class FakeApiManager {
   ];
 
   Future<List<Outlet>> getOutlets() async {
-    await Future.delayed(const Duration(seconds: 4));
-    return _outlets;
+    await Future.delayed(const Duration(seconds: 3));
+    return [..._outlets];
   }
 
   Future<List<Outlet>> getOutletsBySearch(String search) async {
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 3));
     return _outlets.where((outlet) {
-      return outlet.name.toLowerCase().contains(search.toLowerCase());
+      return outlet.name.toLowerCase().startsWith(search.toLowerCase());
     }).toList();
   }
 }

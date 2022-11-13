@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lefoode/api/fake_api.dart';
@@ -25,13 +27,34 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Outlet> _loadedOutlets = [];
   @override
   void initState() {
+    getDefaultOutlets();
+    super.initState();
+  }
+
+  void getDefaultOutlets() {
+    setState(() {
+      loaded = false;
+    });
+    _loadedOutlets.clear();
     FakeApiManager().getOutlets().then((value) {
       setState(() {
         _loadedOutlets = value;
         loaded = true;
       });
     });
-    super.initState();
+  }
+
+  void searchOutletsByName(String query) {
+    setState(() {
+      loaded = false;
+    });
+    _loadedOutlets.clear();
+    FakeApiManager().getOutletsBySearch(query).then((value) {
+      setState(() {
+        _loadedOutlets = value;
+        loaded = true;
+      });
+    });
   }
 
   @override
@@ -41,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Le Foode"),
         elevation: 0,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Ionicons.location_outline)),
           IconButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
@@ -57,8 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Center(
                 child: TextField(
+                  textInputAction: TextInputAction.search,
+                  onChanged: (value) {
+                    
+                  },
                   onSubmitted: (value) {
-                    // Navigator.of(context).pushNamed(ChooseFiltersScreen.routeName);
+                    if (value.trim().isNotEmpty) {
+                      searchOutletsByName(value.trim());
+                    } else {
+                      getDefaultOutlets();
+                    }
                   },
                   decoration: InputDecoration(
                     prefixIcon: Icon(
