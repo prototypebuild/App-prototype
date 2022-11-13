@@ -46,6 +46,8 @@ dependencies:
   provider: ^6.0.4
   shared_preferences: ^2.0.15
   flutter_native_splash: ^2.2.14
+  geolocator: ^9.0.2
+  lottie: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+      - assets/anim/
       - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
