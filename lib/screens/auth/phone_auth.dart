@@ -42,7 +42,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         // Sign the user in (or link) with the auto-generated credential
         await auth.signInWithCredential(credential);
 
-        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        checkRegistration();
       },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
@@ -72,114 +72,111 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
           isDismissible: false,
           builder: (ctx) {
             TextEditingController pincodeController = TextEditingController();
-            return Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                // height: MediaQuery.of(context).size.height * 0.3,
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    VSpace(s: 20),
-                    Container(
-                      width: double.infinity,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          text: "Enter OTP Sent on ",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1,
-                            color: ConstantColors.midGrayText,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: "+91 " + numberController.text.trim(),
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              // recognizer: _longPressRecognizer,
+            return WillPopScope(
+              onWillPop: () async {
+                setState(() {
+                  loading = false;
+                });
+                return true;
+              },
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                  // height: MediaQuery.of(context).size.height * 0.3,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      VSpace(s: 20),
+                      Container(
+                        width: double.infinity,
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: "Enter OTP Sent on ",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                              color: ConstantColors.midGrayText,
                             ),
-                            // TextSpan(text: ' Edit?'),
-                          ],
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "+91 " + numberController.text.trim(),
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                // recognizer: _longPressRecognizer,
+                              ),
+                              // TextSpan(text: ' Edit?'),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    VSpace(s: 50),
-                    PinCodeTextField(
-                      length: 6,
-                      obscureText: false,
-                      animationType: AnimationType.fade,
-                      cursorColor: Colors.black,
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(5),
-                        fieldHeight: 50,
-                        fieldWidth: 40,
-                        activeFillColor: Colors.transparent,
-                        selectedFillColor: Colors.transparent,
-                        inactiveColor: ConstantColors.midGrayText,
-                        inactiveFillColor: Colors.transparent,
+                      VSpace(s: 50),
+                      PinCodeTextField(
+                        length: 6,
+                        obscureText: false,
+                        animationType: AnimationType.fade,
+                        cursorColor: Colors.black,
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          activeFillColor: Colors.transparent,
+                          selectedFillColor: Colors.transparent,
+                          inactiveColor: ConstantColors.midGrayText,
+                          inactiveFillColor: Colors.transparent,
+                        ),
+                        animationDuration: Duration(milliseconds: 300),
+                        enableActiveFill: true,
+                        controller: pincodeController,
+                        onCompleted: (v) async {
+                          UIOverlays.showLoadingOverlay(context);
+                          // Update the UI - wait for the user to enter the SMS code
+                          String smsCode = v;
+
+                          // Create a PhoneAuthCredential with the code
+                          PhoneAuthCredential credential =
+                              PhoneAuthProvider.credential(
+                                  verificationId: verificationId,
+                                  smsCode: smsCode);
+
+                          try {
+                            // Sign the user in (or link) with the credential
+                            await auth.signInWithCredential(credential);
+                          } catch (e) {
+                            var error = e as FirebaseAuthException;
+                            Fluttertoast.showToast(
+                                msg: error.message ?? error.code);
+                            setState(() {
+                              loading = false;
+                            });
+                            Navigator.of(context).popUntil(
+                                ModalRoute.withName(PhoneAuthScreen.routeName));
+                            return;
+                          }
+                          checkRegistration();
+                        },
+                        onChanged: (value) {
+                          print(value);
+                        },
+                        beforeTextPaste: (text) {
+                          if (text != null &&
+                              num.tryParse(text) != null &&
+                              text.length == 6) {
+                            return true;
+                          }
+                          return false;
+                        },
+                        appContext: context,
                       ),
-                      animationDuration: Duration(milliseconds: 300),
-                      enableActiveFill: true,
-                      controller: pincodeController,
-                      onCompleted: (v) async {
-                        UIOverlays.showLoadingOverlay(context);
-                        // Update the UI - wait for the user to enter the SMS code
-                        String smsCode = v;
-
-                        // Create a PhoneAuthCredential with the code
-                        PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: verificationId,
-                                smsCode: smsCode);
-
-                        try {
-                          // Sign the user in (or link) with the credential
-                          await auth.signInWithCredential(credential);
-                        } catch (e) {
-                          var error = e as FirebaseAuthException;
-                          Fluttertoast.showToast(msg: error.message ?? error.code);
-                          setState(() {
-                            loading = false;
-                          });
-                          Navigator.of(context).popUntil(
-                              ModalRoute.withName(PhoneAuthScreen.routeName));
-                          return;
-                        }
-                        var userDoc = await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(auth.currentUser!.uid)
-                            .get();
-                        Navigator.of(context).popUntil(
-                            ModalRoute.withName(PhoneAuthScreen.routeName));
-                        if (userDoc.exists) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(HomeScreen.routeName);
-                        } else {
-                          Navigator.of(context).pushReplacementNamed(
-                              RegistrationScreen.routeName);
-                        }
-                      },
-                      onChanged: (value) {
-                        print(value);
-                      },
-                      beforeTextPaste: (text) {
-                        if (text != null &&
-                            num.tryParse(text) != null &&
-                            text.length == 6) {
-                          return true;
-                        }
-                        return false;
-                      },
-                      appContext: context,
-                    ),
-                    VSpace(s: 20),
-                  ],
+                      VSpace(s: 20),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -189,6 +186,20 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
       codeAutoRetrievalTimeout: (String verificationId) {},
       forceResendingToken: otpResendToken,
     );
+  }
+
+  void checkRegistration() async {
+    var userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .get();
+    Navigator.of(context)
+        .popUntil(ModalRoute.withName(PhoneAuthScreen.routeName));
+    if (userDoc.exists) {
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+    } else {
+      Navigator.of(context).pushReplacementNamed(RegistrationScreen.routeName);
+    }
   }
 
   @override
