@@ -42,7 +42,6 @@ class Input extends StatelessWidget {
   Widget build(BuildContext context) {
     var formField = TextFormField(
       style: TextStyle(
-        color: Colors.white.withOpacity(.87),
         fontSize: 16,
       ),
       autofocus: autofocus,

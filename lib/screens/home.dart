@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool loaded = true;
+  bool loaded = false;
   List<Outlet> _loadedOutlets = [];
   @override
   void initState() {
@@ -127,15 +127,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             VSpace(s: 10),
             if (!loaded)
-              Container(
-                height: 400,
-                child: Center(
-                  child: Transform.scale(
-                    child: CircularProgressIndicator(),
-                    scale: .5,
-                  ),
-                ),
-              )
+             for(var j = 0;j<5;j++)
+             OutletCard.loading(context)
             else
               Column(
                 children: [
@@ -151,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (i != _loadedOutlets.length - 1) VSpace(s: 10),
                       ],
                     ),
-                  if (loaded && _loadedOutlets.isEmpty) ...[
+                  if (_loadedOutlets.isEmpty) ...[
                     Lottie.asset("assets/anim/data-not-found.json",
                         height: 400, width: 400),
                     VSpace(),

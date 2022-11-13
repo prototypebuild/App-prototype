@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lefoode/models/meal.dart';
 import 'package:lefoode/widgets/touchable_opacity.dart';
 import 'package:lefoode/widgets/v_space.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MealCard extends StatelessWidget {
   final Meal meal;
@@ -134,6 +135,55 @@ class MealCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  static Widget loading() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              width: 115,
+              height: 80,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Shimmer(child: Container())),
+          VSpace(isHorizontal: true),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              VSpace(),
+              Container(
+                  width: 100, height: 20, child: Shimmer(child: Container())),
+              VSpace(s: 5),
+              Row(
+                children: [
+                  Container(
+                      width: 100,
+                      height: 20,
+                      child: Shimmer(child: Container())),
+                  VSpace(isHorizontal: true),
+                ],
+              ),
+            ],
+          ),
+          Spacer(),
+          Column(
+            children: [
+              VSpace(),
+              Container(
+                  width: 100, height: 20, child: Shimmer(child: Container())),
+            ],
+          ),
+        ],
       ),
     );
   }

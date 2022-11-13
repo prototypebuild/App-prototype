@@ -84,13 +84,16 @@ class _OutletOpenScreenState extends State<OutletOpenScreen> {
                     ),
                   ),
                 ),
-                for (var i = 0; i < _loadedMeals.length; i++)
-                  FadeAnimation(
-                    delay: i + 1,
-                    child: MealCard(
-                      meal: _loadedMeals[i],
-                    ),
-                  ),
+                if (_loaded)
+                  for (var i = 0; i < _loadedMeals.length; i++)
+                    FadeAnimation(
+                      delay: i + 1,
+                      child: MealCard(
+                        meal: _loadedMeals[i],
+                      ),
+                    )
+                else
+                  for (var j = 0; j < 5; j++) MealCard.loading()
               ],
             ),
           ),

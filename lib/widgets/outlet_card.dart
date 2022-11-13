@@ -5,6 +5,7 @@ import 'package:lefoode/models/outlet.dart';
 import 'package:lefoode/screens/subscreens/home/outlet_open.dart';
 import 'package:lefoode/widgets/primary_button.dart';
 import 'package:lefoode/widgets/v_space.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class OutletCard extends StatelessWidget {
   final Outlet outlet;
@@ -100,6 +101,60 @@ class OutletCard extends StatelessWidget {
       openBuilder: (context, action) {
         return OutletOpenScreen(outlet: outlet);
       },
+    );
+  }
+
+  static Widget loading(BuildContext context) {
+    final viewport = MediaQuery.of(context).size;
+    return Container(
+      width: viewport.width,
+      padding: EdgeInsets.all(5),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Shimmer(
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              height: 190,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                VSpace(),
+                Shimmer(child: Container(height: 30, width: 100)),
+                VSpace(s: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Shimmer(child: Container(height: 20, width: 100)),
+                    Shimmer(child: Container(height: 20, width: 100)),
+                  ],
+                ),
+                VSpace(s: 5),
+                Container(
+                  width: double.infinity,
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Shimmer(child: Container()),
+                  ),
+                ),
+                VSpace(s: 5),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
